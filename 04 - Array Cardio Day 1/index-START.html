@@ -76,6 +76,9 @@
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+    const instances = {};
+    data.forEach(i => (i in instances) ? instances[i] += 1 : instances[i] = 1);
+    console.log(instances);
 
   </script>
 </body>
