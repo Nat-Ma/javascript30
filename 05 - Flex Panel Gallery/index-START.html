@@ -78,20 +78,14 @@
       font-size: 4em;
     }
 
-    .panel > *:first-child {
-      transform: translateY(-100%);
-    }
-    .panel > *:last-child {
-      transform: translateY(100%);
-    }
+    .panel > *:first-child { transform: translateY(-100%); }
+    .panel.open-active > *:first-child { transform: translateY(0); }
+    .panel > *:last-child { transform: translateY(100%); }
+    .panel.open-active > *:last-child { transform: translateY(0); }
 
     .panel.open {
       font-size: 40px;
       flex: 5;
-    }
-
-    .panel.open > * {
-      transform: none;
     }
 
   </style>
@@ -128,12 +122,21 @@
   <script>
     const panels = document.querySelectorAll('.panel');
 
-    function hoverPanel() {
+    function openPanel() {
+      panels.forEach(panel => panel.classList.remove('open'));
       this.classList.toggle('open');
     }
 
-    panels.forEach(panel => panel.addEventListener('click', hoverPanel));
-  </script>
+    function toggleActive(e) {
+      panels.forEach(panel => panel.classList.remove('open-active'));
+      if (e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', openPanel));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+</script>
 
 
 
