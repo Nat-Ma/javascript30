@@ -124,11 +124,15 @@
 
     function openPanel() {
       this.classList.toggle('open');
+      exceptThis(this);
+    }
+
+    function exceptThis(currElement) {
       panels.forEach(panel => {
-        const openPanel = panel.classList;
-        const newPanel = this.classList;
-        if (openPanel[1] !== newPanel[1]) panel.classList.remove('open');
-      })
+        if (panel !== currElement) {
+          panel.classList.remove('open');
+        }
+      });
     }
 
     function toggleActive(e) {
