@@ -41,8 +41,10 @@
   // Set Initial Values
   ctx.strokeStyle = colorInput.value;
   ctx.lineWidth = strokeInput.value;
-  ctx.lineJoin = 'round';
+  ctx.lineJoin = 'milter';
   ctx.lineCap = 'round';
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = 'rgba(255,255,255,.4';
   let direction = true;
   let isDrawing = false;
   let [lastX, lastY] = [0, 0];
