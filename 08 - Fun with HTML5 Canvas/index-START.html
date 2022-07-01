@@ -5,45 +5,116 @@
   <title>HTML5 Canvas</title>
 </head>
 <body>
+
+<form id="inputs">
+  <!-- stroke size, colour picker, checkbox for varying color/stroke -->
+  <label for="stroke">Brush size</label>
+  <input type="range" id="stroke" name="stroke" min="0" max="49">
+  <label for="base">Base Color</label>
+  <input id="base" type="color" name="base" value="#ffc600">
+  <input type="checkbox" id="dynamic-brush" name="dynamic-brush">
+  <label for="dynamic-brush">Dynamic Brush</label>
+  <input type="checkbox" id="dynamic-color" name="dynamic-color">
+  <label for="dynamic-color">Dynamic Color</label>
+</form>
+
 <canvas id="draw" width="800" height="800"></canvas>
+
 <script>
- const canvas = document.getElementById('draw');
- const ctx = canvas.getContext('2d');
- canvas.width = window.innerWidth;
- canvas.height = window.innerHeight;
+  // HTML Canvas
+  const canvas = document.getElementById('draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
- let hue = 0;
- let lineWidth = 1;
- ctx.lineWidth = 10;
- ctx.lineJoin = 'round';
- ctx.lineCap = 'round';
- let direction = true;
+  // User Input
+  const inputs = document.querySelectorAll('input');
 
- let isDrawing = false;
- let [lastX, lastY] = [0, 0];
+  let hex;
+  let hue =  47;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  let direction = true;
+  ctx.shadowBlur = 40;
 
- function draw(e) {
-  if(!isDrawing) return;
-  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-  [lastX, lastY] = [e.offsetX, e.offsetY];
-  hue++;
-  if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) {
-    direction = !direction;
+  const dynamicBrush = document.getElementById('dynamic-brush');
+  const dynamicColor = document.getElementById('dynamic-color');
+
+  inputs.forEach(input => {
+    ctx.strokeStyle = input.value;
+    ctx.shadowColor = input.value;
+    ctx.lineWidth = input.value;
+    if (input.value.includes('#')) {
+      hex = hexToHSL(input.value);
+      hue = hex.h * 360;
+    };
+    input.addEventListener('input', () => {
+      ctx.lineWidth = input.value;
+      ctx.strokeStyle = input.value;
+      ctx.shadowColor = input.value;
+      if (input.value.includes('#')) {
+        hex = hexToHSL(input.value);
+        hue = hex.h * 360;
+      };
+    })
+  });
+
+
+  let isDrawing = false;
+  let [lastX, lastY] = [0, 0];
+
+  function draw(e, checked) {
+    if(!isDrawing) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    if (dynamicBrush.checked) {
+      if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) direction = !direction;
+      (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
+    }
+    if (dynamicColor.checked) {
+      ctx.strokeStyle = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
+      ctx.shadowColor = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
+      hue++;
+    }
   }
-  (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
- }
 
- canvas.addEventListener('mousemove', draw);
- canvas.addEventListener('mousedown', (e) => {
-  isDrawing = true;
-  [lastX, lastY] = [e.offsetX, e.offsetY];
-});
- canvas.addEventListener('mouseup', () => isDrawing = false);
- canvas.addEventListener('mouseout', () => isDrawing = false);
+  function hexToHSL(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      r = parseInt(result[1], 16);
+      g = parseInt(result[2], 16);
+      b = parseInt(result[3], 16);
+      r /= 255, g /= 255, b /= 255;
+      var max = Math.max(r, g, b), min = Math.min(r, g, b);
+      var h, s, l = (max + min) / 2;
+      if(max == min){
+        h = s = 0; // achromatic
+      }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+    var HSL = new Object();
+    HSL['h']=h;
+    HSL['s']=s;
+    HSL['l']=l;
+    return HSL;
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
 
 </script>
 
