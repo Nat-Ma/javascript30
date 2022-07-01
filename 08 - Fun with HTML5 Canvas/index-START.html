@@ -6,17 +6,24 @@
 </head>
 <body>
 
-<form id="inputs">
-  <!-- stroke size, colour picker, checkbox for varying color/stroke -->
-  <label for="stroke">Brush size</label>
-  <input type="range" id="stroke" name="stroke" min="0" max="49">
-  <label for="base">Base Color</label>
-  <input id="base" type="color" name="base" value="#ffc600">
-  <input type="checkbox" id="dynamic-brush" name="dynamic-brush">
-  <label for="dynamic-brush">Dynamic Brush</label>
-</form>
+<div class="container">
+  <form id="inputs">
+    <div>
+      <label for="stroke">Brush size</label>
+      <input type="range" id="stroke" name="stroke" min="0" max="49">
+    </div>
+    <div>
+      <label for="base">Base Color</label>
+      <input id="base" type="color" name="base" value="#ffc600">
+    </div>
+    <div>
+      <input type="checkbox" id="dynamic-brush" name="dynamic-brush">
+      <label for="dynamic-brush">Dynamic Brush</label>
+    </div>
+  </form>
 
-<canvas id="draw" width="800" height="800"></canvas>
+  <canvas id="draw" width="800" height="800"></canvas>
+</div>
 
 <script>
   // HTML Canvas
@@ -29,6 +36,7 @@
   const colorInput = document.getElementById('base');
   const strokeInput = document.getElementById('stroke');
   const dynamicBrush = document.getElementById('dynamic-brush');
+  const container = document.querySelector('.container');
 
   // Set Initial Values
   ctx.strokeStyle = colorInput.value;
@@ -63,7 +71,9 @@
     if (dynamicBrush.checked) {
       if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) direction = !direction;
       (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
-      ctx.strokeStyle = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
+      let hsl = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
+      ctx.strokeStyle = hsl;
+      container.style.backgroundColor = hsl;
       hue++;
     }
   }
@@ -108,6 +118,25 @@
 <style>
   html, body {
     margin: 0;
+  }
+  .container {
+    width: 100%;
+    padding: 30px 20px;
+    background-color: var(--base);
+    position: absolute;
+    top: 0;
+  }
+  form {
+    display: flex;
+    justify-content: space-around;
+  }
+  form div {
+    display: flex;
+    align-items: center;
+  }
+  label {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 10px 20px;
   }
 </style>
 

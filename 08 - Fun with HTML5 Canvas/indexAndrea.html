@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+  <div class="container sliders-container">
+    <div class="sliders">
+      <label for="brushsize">Brushsize:</label>
+      <input id="brushsize" type="range" name="brushsize" min="1" max="100" value="50" data-sizing="px">
+
+      <label for="colorpicker">Color picker:</label>
+      <input id="colorpicker" type="color" name="colorpicker" value="#BADA55">
+
+      <label for="fixedstroke">Dynamic brush:</label>
+      <input id="fixedstroke" type="checkbox" name="fixedstroke">
+    </div>
+  </div>
+<canvas id="draw" width="800" height="800"></canvas>
+<!-- select canvas -->
+<!-- set canvas height and width -->
+<!-- set strokestyle -->
+<!-- set joining lines shape linejoin (round)-->
+<!-- set end of line shape start of linecap (round) -->
+<!-- variable set false when no pressing down mouse -->
+<!-- set starting ad ending line coordinates -->
+<!-- create function to draw and associated listener for drawing = true -->
+  <!-- set event listener to active function draw when mouse down -->
+  <!-- set event listener to deactive function draw when mouse up or outside canvas -->
+  <!-- beginpath -->
+  <!-- moveto coordinates -->
+
+<script>
+  const canvas = document.querySelector("#draw")
+  const ctx = canvas.getContext("2d")
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.strokeStyle = "#BADA55";
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  let hue = 0;
+  console.log('hue1');
+  console.log(hue);
+  let hsl = 0;
+  ctx.lineWidth = 20;
+  let isDrawing = false;
+  let direction = true;
+  [lastX, lastY] = [0, 0]
+
+
+  const controls = document.querySelectorAll(".sliders > input");
+  let hex = ctx.strokeStyle;
+  let dynamicBrush = false;
+
+  controls.forEach(input => input.addEventListener("input", () => {
+    if (input.name.includes("fixedstroke")) {
+      (dynamicBrush === true) ? dynamicBrush = false : dynamicBrush = true
+    };
+    if (input.name.includes("brushsize")) {
+      ctx.lineWidth = input.value
+    };
+    // ctx.strokeStyle = input.value
+    if (input.name.includes("colorpicker")) {
+      hex = input.value;
+      hsl = hexToHSL(hex);
+      hue = hsl.h * 360;
+    }
+  }));
+
+
+  function hexToHSL(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    r = parseInt(result[1], 16);
+    g = parseInt(result[2], 16);
+    b = parseInt(result[3], 16);
+    r /= 255, g /= 255, b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+    if(max == min){
+      h = s = 0; // achromatic
+    }else{
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    var HSL = new Object();
+    HSL['h']=h;
+    HSL['s']=s;
+    HSL['l']=l;
+    return HSL;
+  };
+
+  function draw(e) {
+    if (!isDrawing) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY)
+    ctx.lineTo(e.offsetX, e.offsetY)
+    ctx.stroke();
+
+    [lastX, lastY] = [e.offsetX, e.offsetY]
+
+    if (dynamicBrush) {
+      ctx.strokeStyle = `hsl(${hue}, ${hsl.s * 100}%, ${hsl.l * 100}%)`;
+      hue++;
+      if (hue >= 360) {
+        hue = 0
+      }
+
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        direction = !direction
+      }
+
+      if (direction) {
+        ctx.lineWidth++;
+      } else {
+        ctx.lineWidth--;
+      }
+    }
+  }
+
+  canvas.addEventListener("mousedown", () => {
+    isDrawing = true
+    lastX = this.layerX
+    lastY = this.layerY
+  });
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", () => isDrawing = false );
+  canvas.addEventListener("mouseout", () => isDrawing = false );
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+
+  .sliders-container {
+    /* position: relative; */
+    padding: 30px;
+    background-color: #F5F0BB;
+  }
+  .sliders {
+    /* position: absolute; */
+  }
+
+</style>
+
+</body>
+</html>
+
+<!-- strokesize = slider -->
+
+<!-- colorpicker -->
+<!-- fixed color, fixed stroke => checkbox -->
