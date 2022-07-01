@@ -14,8 +14,6 @@
   <input id="base" type="color" name="base" value="#ffc600">
   <input type="checkbox" id="dynamic-brush" name="dynamic-brush">
   <label for="dynamic-brush">Dynamic Brush</label>
-  <input type="checkbox" id="dynamic-color" name="dynamic-color">
-  <label for="dynamic-color">Dynamic Color</label>
 </form>
 
 <canvas id="draw" width="800" height="800"></canvas>
@@ -31,7 +29,6 @@
   const colorInput = document.getElementById('base');
   const strokeInput = document.getElementById('stroke');
   const dynamicBrush = document.getElementById('dynamic-brush');
-  const dynamicColor = document.getElementById('dynamic-color');
 
   // Set Initial Values
   ctx.strokeStyle = colorInput.value;
@@ -66,8 +63,6 @@
     if (dynamicBrush.checked) {
       if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) direction = !direction;
       (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
-    }
-    if (dynamicColor.checked) {
       ctx.strokeStyle = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
       hue++;
     }
