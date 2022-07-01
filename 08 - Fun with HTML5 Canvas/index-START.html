@@ -73,9 +73,8 @@
     if (dynamicBrush.checked) {
       if (ctx.lineWidth >= 50 || ctx.lineWidth <= 1) direction = !direction;
       (direction) ? ctx.lineWidth++ : ctx.lineWidth--;
-      let hsl = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
-      ctx.strokeStyle = hsl;
-      container.style.backgroundColor = hsl;
+      ctx.strokeStyle = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
+      container.style.backgroundColor = `hsl(${hue + 180}, ${hex.s * 100}%, ${hex.l * 100}%)`;
       hue++;
     }
   }
@@ -124,7 +123,6 @@
   .container {
     width: 100%;
     padding: 30px 20px;
-    background-color: var(--base);
     position: absolute;
     top: 0;
   }
