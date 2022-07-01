@@ -31,18 +31,16 @@
   const inputs = document.querySelectorAll('input');
 
   let hex;
-  let hue =  47;
+  let hue;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
   let direction = true;
-  ctx.shadowBlur = 40;
 
   const dynamicBrush = document.getElementById('dynamic-brush');
   const dynamicColor = document.getElementById('dynamic-color');
 
   inputs.forEach(input => {
     ctx.strokeStyle = input.value;
-    ctx.shadowColor = input.value;
     ctx.lineWidth = input.value;
     if (input.value.includes('#')) {
       hex = hexToHSL(input.value);
@@ -51,8 +49,7 @@
     input.addEventListener('input', () => {
       ctx.lineWidth = input.value;
       ctx.strokeStyle = input.value;
-      ctx.shadowColor = input.value;
-      if (input.value.includes('#')) {
+        if (input.value.includes('#')) {
         hex = hexToHSL(input.value);
         hue = hex.h * 360;
       };
@@ -76,7 +73,6 @@
     }
     if (dynamicColor.checked) {
       ctx.strokeStyle = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
-      ctx.shadowColor = `hsl(${hue}, ${hex.s * 100}%, ${hex.l * 100}%)`;
       hue++;
     }
   }
