@@ -20,6 +20,7 @@
       <input type="checkbox" id="dynamic-brush" name="dynamic-brush">
       <label for="dynamic-brush">Dynamic Brush</label>
     </div>
+    <a id="download" download="myImage.jpg" href="" onclick="download_img(this);">Download</a>
   </form>
 
   <canvas id="draw" width="800" height="800"></canvas>
@@ -114,6 +115,11 @@
   canvas.addEventListener('mouseup', () => isDrawing = false);
   canvas.addEventListener('mouseout', () => isDrawing = false);
 
+  download_img = function(el) {
+    const image = canvas.toDataURL("image/jpg");
+    el.href = image;
+  };
+
 </script>
 
 <style>
@@ -122,13 +128,15 @@
   }
   .container {
     width: 100%;
-    padding: 30px 20px;
-    position: absolute;
-    top: 0;
+    background-color: var(--base);
+    position: relative;
   }
   form {
+    position: absolute;
     display: flex;
     justify-content: space-around;
+    width: 100%;
+    padding: 20px 0;
   }
   form div {
     display: flex;
