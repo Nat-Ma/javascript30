@@ -5,6 +5,7 @@ const toggle = player.querySelector('.toggle');
 const skipButton = player.querySelectorAll('[data-skip]');
 const ranges = player.querySelectorAll('.player__slider');
 const progressBar = player.querySelector('.progress__filled');
+const progress = player.querySelector('.progress');
 
 // functions
 function playVideo() {
@@ -24,13 +25,21 @@ function updateRange() {
 }
 
 function handleProgress() {
+  const percent = video.currentTime * 100 / video.duration;
+  progressBar.style.flexBasis = `${percent}%`;
+}
 
+function updateSlider(e) {
+  const percent = e.offsetX * 100 / progress.clientWidth;
+  progressBar.style.flexBasis = `${percent}%`;
+  video.currentTime = percent * video.duration / 100;
 }
 
 // hook up elements to functions
 video.addEventListener('click', playVideo);
 video.addEventListener('play', toggleIcon);
 video.addEventListener('pause', toggleIcon);
+video.addEventListener('timeupdate', handleProgress);
 
 toggle.addEventListener('click', playVideo);
 
@@ -40,4 +49,4 @@ window.addEventListener('keydown', (e) => {
 
 skipButton.forEach(b => b.addEventListener('click', skipTime));
 ranges.forEach(r => r.addEventListener('change', updateRange));
-progressBar.addEventListener('change', handleProgress);
+progress.addEventListener('click', updateSlider);
