@@ -31,7 +31,7 @@ function handleProgress() {
 
 function updateSlider(e) {
   const percent = e.offsetX * 100 / progress.clientWidth;
-  progressBar.style.flexBasis = `${percent}%`;
+  progressBar.style.flexBasis = `${percent}%`; 
   video.currentTime = percent * video.duration / 100;
 }
 
@@ -49,4 +49,9 @@ window.addEventListener('keydown', (e) => {
 
 skipButton.forEach(b => b.addEventListener('click', skipTime));
 ranges.forEach(r => r.addEventListener('change', updateRange));
+
+let mousedown = false;
 progress.addEventListener('click', updateSlider);
+progress.addEventListener('mousemove', (e) => mousedown && updateSlider(e));
+progress.addEventListener('mousedown', () => mousedown = true);
+progress.addEventListener('mouseup', () => mousedown = false);
