@@ -7,6 +7,18 @@
 </head>
 <body>
 <script>
+
+  const secretCode = 'curtis';
+  const keyInput = [];
+
+  window.addEventListener('keyup', (e) => {
+    keyInput.push(e.key);
+    keyInput.splice(-secretCode.length -1, keyInput.length - secretCode.length);
+    if (keyInput.join('') === secretCode) {
+      cornify_add();
+    }
+  })
+
 </script>
 </body>
 </html>
