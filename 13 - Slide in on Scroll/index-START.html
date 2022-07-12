@@ -58,6 +58,22 @@
       };
     }
 
+    const images = document.querySelectorAll('.slide-in');
+    const imgage = document.querySelector('.slide-in');
+
+    function handleScroll(e) {
+      images.forEach(img => {
+          if (img.y - img.clientHeight < window.innerHeight) img.classList.add('active');
+          if (img.y - img.clientHeight / 2 > window.innerHeight) img.classList.remove('active');
+        }
+      )
+    }
+
+    document.addEventListener('scroll', handleScroll);
+    // get images.y position from all images ... forEach
+    // if y === innerHeight of window or document trigger debounce
+
+
   </script>
 
   <style>
@@ -68,11 +84,11 @@
       font-size: 20px;
       font-weight: 200;
     }
-    
+
     body {
       margin: 0;
     }
-    
+
     *, *:before, *:after {
       box-sizing: inherit;
     }
@@ -107,7 +123,7 @@
     .align-left.slide-in {
       transform: translateX(-30%) scale(0.95);
     }
-    
+
     .align-right.slide-in {
       transform: translateX(30%) scale(0.95);
     }
