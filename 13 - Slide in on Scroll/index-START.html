@@ -59,20 +59,20 @@
     }
 
     const images = document.querySelectorAll('.slide-in');
-    const imgage = document.querySelector('.slide-in');
 
-    function handleScroll(e) {
+    function handleScroll() {
       images.forEach(img => {
-          if (img.y - img.clientHeight < window.innerHeight) img.classList.add('active');
-          if (img.y - img.clientHeight / 2 > window.innerHeight) img.classList.remove('active');
+        const scrolledPastTop = img.y < -(img.clientHeight * 2);
+        const scrolledPastBottom = img.y - img.clientHeight / 2 > window.innerHeight;
+        if (scrolledPastTop || scrolledPastBottom) {
+          img.classList.remove('active')
+        } else {
+          img.classList.add('active');
+        };
         }
-      )
-    }
+      )}
 
     document.addEventListener('scroll', handleScroll);
-    // get images.y position from all images ... forEach
-    // if y === innerHeight of window or document trigger debounce
-
 
   </script>
 
