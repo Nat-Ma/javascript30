@@ -13,6 +13,7 @@
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
 
     // and we want to make a copy of it.
+    const players2 = [...players];
 
     // You might think we can just do something like this:
 
@@ -43,6 +44,8 @@
     };
 
     // and think we make a copy:
+    const andrea = {...person, name: 'andrea'};
+    console.log(andrea);
 
     // how do we take a copy instead?
 
