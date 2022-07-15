@@ -19,8 +19,10 @@
     <ul class="plates">
       <li>Loading Tapas...</li>
     </ul>
-    <button class="check-all">Check all</button>
-    <button class="delete-all">Delete all</button>
+    <div class="buttons">
+      <button class="select-all">Check all</button>
+      <button class="delete-all">Delete all</button>
+    </div>
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
@@ -31,7 +33,9 @@
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
   const items = JSON.parse(localStorage.getItem('items')) || [];
-  const buttons = document.querySelectorAll('button');
+  const deleteAll = document.querySelector('.delete-all');
+  const selectAll = document.querySelector('.select-all');
+  const buttons = document.querySelectorAll('.buttons button');
 
   function addItem(e) {
     e.preventDefault();
@@ -56,6 +60,7 @@
         `;
     }).join('');
     displayOptions();
+    selectAll.innerHTML = updateButton();
   }
 
   function updateDone(e) {
@@ -63,24 +68,31 @@
     items[index].done = !items[index].done;
     localStorage.setItem('items', JSON.stringify(items));
     populateList(items, itemsList);
+    selectAll.innerHTML = updateButton();
   }
 
-  function handleClick() {
-    if (this.classList.contains('delete-all')) {
-      items.length = 0;
-      localStorage.clear();
-    }
-    if (this.classList.contains('check-all')) {
-      items.forEach(item => {
-        item.done = !item.done;
-        (item.done === true) ? this.innerHTML = 'Uncheck all' : this.innerHTML = 'Check all';
-      })
-      localStorage.setItem('items', JSON.stringify(items));
-    }
+  function handleDelete() {
+    items.length = 0;
+    localStorage.clear();
     populateList(items, itemsList);
   }
 
-  console.log(buttons);
+  function handleSelect() {
+    if (items.every(item => item.done === true)) {
+      items.forEach(item => item.done = false);
+      selectAll.innerHTML = updateButton();
+    } else {
+      items.forEach(item => item.done = true);
+      selectAll.innerHTML = updateButton();
+    }
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  function updateButton() {
+    return (items.every(item => item.done === true)) ? 'Uncheck all' : 'Check all';
+  }
+
 
   function displayOptions() {
     (itemsList.childElementCount === 0) ? buttons.forEach(btn => btn.style.display = 'none') : buttons.forEach(btn => btn.style.display = 'inline');
@@ -88,10 +100,11 @@
 
   addItems.addEventListener('submit', addItem);
   itemsList.addEventListener('change', updateDone);
+
+  deleteAll.addEventListener('click', handleDelete);
+  selectAll.addEventListener('click', handleSelect);
+
   populateList(items, itemsList);
-
-  buttons.forEach(btn => btn.addEventListener('click', handleClick));
-
 </script>
 
 
