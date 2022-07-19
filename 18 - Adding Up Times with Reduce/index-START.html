@@ -196,7 +196,11 @@
   const minutes = Math.floor(total / 60) % 60;
   const hours = Math.floor(total / 60 /60);
 
-  console.log(`${hours}:${minutes}:${seconds}`)
+  function digits(time) {
+    return (time < 9) ? '0' + time : time;
+  }
+
+  console.log(`${digits(hours)}:${digits(minutes)}:${digits(seconds)}`)
 </script>
 </body>
 </html>
